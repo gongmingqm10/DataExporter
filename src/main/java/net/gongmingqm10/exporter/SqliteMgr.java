@@ -4,13 +4,11 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import net.gongmingqm10.exporter.model.Backing;
-import net.gongmingqm10.exporter.model.Project;
-import net.gongmingqm10.exporter.model.Visit;
+import net.gongmingqm10.exporter.model.*;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +18,8 @@ public class SqliteMgr {
     private static SqliteMgr instance;
     private Dao<Backing, Long> backingDao;
     private Dao<Project, Long> projectDao;
+    private Dao<Series, Long> seriesDao;
+    private Dao<Traffic, Long> trafficDao;
     private Dao<Visit, Long> visitDao;
     private ConnectionSource connectionSource;
 
@@ -29,6 +29,8 @@ public class SqliteMgr {
             backingDao = DaoManager.createDao(connectionSource, Backing.class);
             projectDao = DaoManager.createDao(connectionSource, Project.class);
             visitDao = DaoManager.createDao(connectionSource, Visit.class);
+            seriesDao = DaoManager.createDao(connectionSource, Series.class);
+            trafficDao = DaoManager.createDao(connectionSource, Traffic.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -76,7 +78,12 @@ public class SqliteMgr {
         projectDao.create(project);
     }
 
-    public void createProject(Project project) throws SQLException {
-        projectDao.create(project);
+    public void createSeries(List<Series> series) throws SQLException {
+        seriesDao.create(series);
     }
+
+    public void createTraffic(List<Traffic> traffic) throws SQLException {
+        trafficDao.create(traffic);
+    }
+
 }

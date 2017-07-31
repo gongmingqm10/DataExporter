@@ -2,6 +2,8 @@ package net.gongmingqm10.exporter.util;
 
 import net.gongmingqm10.exporter.model.Backing;
 import net.gongmingqm10.exporter.model.Project;
+import net.gongmingqm10.exporter.model.Series;
+import net.gongmingqm10.exporter.model.Traffic;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,7 +14,7 @@ public class ParserTest {
     public void should_parse_backing_from_raw_line() throws Exception {
         String rawBacking = "\"2063069755\"|\"4957715\"|\"2016-04-13 07:43:08\"|\"created\"|\"90.00\"";
 
-        Backing backing = Parser.transformRowBacking(rawBacking);
+        Backing backing = Parser.transformRawBacking(rawBacking);
 
         assertNotNull(backing);
         assertEquals("2063069755", backing.getCode1());
@@ -49,7 +51,7 @@ public class ParserTest {
                 "\"385.00\"|" +
                 "\"0\"|" +
                 "\"1\"";
-        Project project = Parser.transformRowProject(projectRaw);
+        Project project = Parser.transformRawProject(projectRaw);
         assertNotNull(project);
 
         assertEquals("1343894862", project.getCode1());
@@ -79,5 +81,72 @@ public class ParserTest {
         assertTrue(385.00 - project.getAmount5() < 0.00001);
         assertFalse(project.isFlag5());
         assertTrue(project.isFlag6());
+    }
+
+    @Test
+    public void should_parse_series_from_raw_line() throws Exception {
+        String rawSeries = "\"1021554757\"|\"2015-06-04 02:00:00\"|\"0\"|\"0.00\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"";
+        Series series = Parser.transformRawSeries(rawSeries);
+
+        assertNotNull(series);
+        assertEquals("1021554757", series.getCode1());
+        assertEquals(Parser.parseDate("2015-06-04 02:00:00"), series.getLaunchedAt());
+        assertEquals(Integer.valueOf(0), series.getQuantity1());
+        assertTrue(0.00 - series.getAmount1() < 0.000001);
+        assertEquals(Integer.valueOf(0), series.getQuantity2());
+        assertEquals(Integer.valueOf(0), series.getQuantity3());
+        assertEquals(Integer.valueOf(0), series.getQuantity4());
+        assertEquals(Integer.valueOf(0), series.getQuantity5());
+        assertEquals(Integer.valueOf(0), series.getQuantity6());
+        assertEquals(Integer.valueOf(0), series.getQuantity7());
+        assertEquals(Integer.valueOf(0), series.getQuantity8());
+    }
+
+    @Test
+    public void should_parse_traffic_from_raw_line() throws Exception {
+        String rawTraffic = "\"1676404360\"|\"2015-01-20 09:00:00\"|\"0.0001606728313323102\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"1.1080884919469669e-05\"|\"3.8783097218143838e-05\"|\"1.1080884919469669e-05\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"0\"|\"8.8647079355757351e-05\"|\"0\"|\"0\"|\"0\"|\"0\"|\"7.2025751976552847e-05\"|\"0\"|\"0\"|\"0\"|\"1.1080884919469669e-05\"|\"0.00014959194641284054\"|\"1.6621327379204504e-05\"|\"5.5404424597348344e-06\"|\"0.00013851106149337085\"|\"1.1080884919469669e-05\"|\"1.1080884919469669e-05\"";
+        Traffic traffic = Parser.transformRawTraffic(rawTraffic);
+
+        assertNotNull(traffic);
+        assertEquals("1676404360", traffic.getCode1());
+        assertTrue(0.0001606728313323102 - traffic.getAmount1() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount2() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount3() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount4() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount5() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount6() < 0.000000000001);
+        assertTrue(1.1080884919469669e-05 - traffic.getAmount7() < 0.000000000001);
+        assertTrue(3.8783097218143838e-05 - traffic.getAmount8() < 0.000000000001);
+        assertTrue(1.1080884919469669e-05 - traffic.getAmount9() < 0.000000000001);
+
+        assertTrue(0.00 - traffic.getAmount10() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount11() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount12() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount13() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount14() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount15() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount16() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount17() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount18() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount19() < 0.000000000001);
+
+        assertTrue(8.8647079355757351e-05 - traffic.getAmount20() < 0.000000000001);
+
+        assertTrue(0.00 - traffic.getAmount21() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount22() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount23() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount24() < 0.000000000001);
+        assertTrue(7.2025751976552847e-05 - traffic.getAmount25() < 0.000000000001);
+
+        assertTrue(0.00 - traffic.getAmount26() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount27() < 0.000000000001);
+        assertTrue(0.00 - traffic.getAmount28() < 0.000000000001);
+        assertTrue(1.1080884919469669e-05 - traffic.getAmount29() < 0.000000000001);
+        assertTrue(0.00014959194641284054 - traffic.getAmount30() < 0.000000000001);
+        assertTrue(1.6621327379204504e-05 - traffic.getAmount31() < 0.000000000001);
+        assertTrue(5.5404424597348344e-06 - traffic.getAmount32() < 0.000000000001);
+        assertTrue(0.00013851106149337085 - traffic.getAmount33() < 0.000000000001);
+        assertTrue(1.1080884919469669e-05 - traffic.getAmount34() < 0.000000000001);
+        assertTrue(1.1080884919469669e-05 - traffic.getAmount35() < 0.000000000001);
     }
 }

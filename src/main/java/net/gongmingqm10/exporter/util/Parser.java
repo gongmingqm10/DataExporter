@@ -2,8 +2,11 @@ package net.gongmingqm10.exporter.util;
 
 import net.gongmingqm10.exporter.model.Backing;
 import net.gongmingqm10.exporter.model.Project;
+import net.gongmingqm10.exporter.model.Series;
+import net.gongmingqm10.exporter.model.Traffic;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +16,7 @@ import java.util.stream.Stream;
 
 public class Parser {
 
-    public static Backing transformRowBacking(String rawBacking) {
+    public static Backing transformRawBacking(String rawBacking) {
         try {
             if (StringUtils.isEmpty(rawBacking)) {
                 return null;
@@ -32,12 +35,41 @@ public class Parser {
         return null;
     }
 
+    public static Series transformRawSeries(String rawSeries) {
+        try {
+            if (StringUtils.isEmpty(rawSeries)) {
+                return null;
+            }
+            List<String> rawFields = processRawLine(rawSeries);
+            if (rawFields.size() != 12) {
+                return null;
+            }
+            Series series = new Series();
+            series.setCode1(rawFields.get(0));
+            series.setLaunchedAt(parseDate(rawFields.get(1)));
+            series.setQuantity1(parseInteger(rawFields.get(2)));
+            series.setAmount1(parseDouble(rawFields.get(3)));
+            series.setQuantity1(parseInteger(rawFields.get(4)));
+            series.setQuantity2(parseInteger(rawFields.get(5)));
+            series.setQuantity3(parseInteger(rawFields.get(6)));
+            series.setQuantity4(parseInteger(rawFields.get(7)));
+            series.setQuantity5(parseInteger(rawFields.get(8)));
+            series.setQuantity6(parseInteger(rawFields.get(9)));
+            series.setQuantity7(parseInteger(rawFields.get(10)));
+            series.setQuantity8(parseInteger(rawFields.get(11)));
+            return series;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Date parseDate(String rawDate) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.parse(rawDate);
     }
 
-    public  static Project transformRowProject(String rawProject) {
+    public static Project transformRawProject(String rawProject) {
         try {
             if (StringUtils.isEmpty(rawProject)) {
                 return null;
@@ -101,5 +133,59 @@ public class Parser {
         }catch (Exception e) {
             return null;
         }
+    }
+
+    public static Traffic transformRawTraffic(String rawTraffic) {
+        try {
+            if (StringUtils.isEmpty(rawTraffic)) {
+                return null;
+            }
+            List<String> rawFields = processRawLine(rawTraffic);
+            if (rawFields.size() != 37) {
+                return null;
+            }
+            Traffic traffic = new Traffic();
+            traffic.setCode1(rawFields.get(0));
+            traffic.setLaunchedAt(parseDate(rawFields.get(1)));
+            traffic.setAmount1(parseDouble(rawFields.get(2)));
+            traffic.setAmount2(parseDouble(rawFields.get(3)));
+            traffic.setAmount3(parseDouble(rawFields.get(4)));
+            traffic.setAmount4(parseDouble(rawFields.get(5)));
+            traffic.setAmount5(parseDouble(rawFields.get(6)));
+            traffic.setAmount6(parseDouble(rawFields.get(7)));
+            traffic.setAmount7(parseDouble(rawFields.get(8)));
+            traffic.setAmount8(parseDouble(rawFields.get(9)));
+            traffic.setAmount9(parseDouble(rawFields.get(10)));
+            traffic.setAmount10(parseDouble(rawFields.get(11)));
+            traffic.setAmount11(parseDouble(rawFields.get(12)));
+            traffic.setAmount12(parseDouble(rawFields.get(13)));
+            traffic.setAmount13(parseDouble(rawFields.get(14)));
+            traffic.setAmount14(parseDouble(rawFields.get(15)));
+            traffic.setAmount15(parseDouble(rawFields.get(16)));
+            traffic.setAmount16(parseDouble(rawFields.get(17)));
+            traffic.setAmount17(parseDouble(rawFields.get(18)));
+            traffic.setAmount18(parseDouble(rawFields.get(19)));
+            traffic.setAmount19(parseDouble(rawFields.get(20)));
+            traffic.setAmount20(parseDouble(rawFields.get(21)));
+            traffic.setAmount21(parseDouble(rawFields.get(22)));
+            traffic.setAmount22(parseDouble(rawFields.get(23)));
+            traffic.setAmount23(parseDouble(rawFields.get(24)));
+            traffic.setAmount24(parseDouble(rawFields.get(25)));
+            traffic.setAmount25(parseDouble(rawFields.get(26)));
+            traffic.setAmount26(parseDouble(rawFields.get(27)));
+            traffic.setAmount27(parseDouble(rawFields.get(28)));
+            traffic.setAmount28(parseDouble(rawFields.get(29)));
+            traffic.setAmount29(parseDouble(rawFields.get(30)));
+            traffic.setAmount30(parseDouble(rawFields.get(31)));
+            traffic.setAmount31(parseDouble(rawFields.get(32)));
+            traffic.setAmount32(parseDouble(rawFields.get(33)));
+            traffic.setAmount33(parseDouble(rawFields.get(34)));
+            traffic.setAmount34(parseDouble(rawFields.get(35)));
+            traffic.setAmount35(parseDouble(rawFields.get(36)));
+            return traffic;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

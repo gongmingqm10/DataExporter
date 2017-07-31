@@ -1,9 +1,7 @@
 package net.gongmingqm10.exporter;
 
 import net.gongmingqm10.exporter.exception.FilePathException;
-import net.gongmingqm10.exporter.model.Backing;
-import net.gongmingqm10.exporter.model.Project;
-import net.gongmingqm10.exporter.model.Visit;
+import net.gongmingqm10.exporter.model.*;
 import net.gongmingqm10.exporter.util.AppConfig;
 import net.gongmingqm10.exporter.util.Parser;
 import org.flywaydb.core.Flyway;
@@ -20,7 +18,6 @@ public class App {
 
     private final static String RAW_DATA_FOLDER = "/Users/mingong/Desktop/raw/";
     private final static String ARCHIVE_DATA_FOLDER = "/Users/mingong/Desktop/archieve/";
-    private final ClassLoader classLoader = getClass().getClassLoader();
 
     private App() {
     }
@@ -30,9 +27,9 @@ public class App {
         app.run();
     }
 
-    public void run() {
+    private void run() {
         flywayMigrate();
-        unzipRawData();
+//        unzipRawData();
         processRowData();
     }
 
@@ -82,21 +79,34 @@ public class App {
         boolean isBackingFile = fileName.contains("backing");
         List<Backing> backingList = new ArrayList<>();
         List<Project> projectList = new ArrayList<>();
+        List<Series> seriesList = new ArrayList<>();
+        List<Traffic> trafficList = new ArrayList<>();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             while ((line = br.readLine()) != null) {
-                if (isBackingFile) {
-                    backingList.add(Parser.transformRowBacking(line));
-                } else {
-                    projectList.add(Parser.transformRowProject(line));
+//                if (fileName.contains("backing")) {
+//                    backingList.add(Parser.transformRawBacking(line));
+//                } else if (fileName.contains("projects_static")) {
+//                    projectList.add(Parser.transformRawProject(line));
+//                }
+                    if (fileName.contains("projects_timeseries")) {
+                    seriesList.add(Parser.transformRawSeries(line));
+                } else if (fileName.contains("projects_traffic")) {
+                    trafficList.add(Parser.transformRawTraffic(line));
                 }
             }
-            if (isBackingFile) {
-                SqliteMgr.getInstance().createBacking(backingList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
-            } else {
-                SqliteMgr.getInstance().createProject(projectList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+
+//            if (fileName.contains("backing")) {
+//                SqliteMgr.getInstance().createBacking(backingList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+//            } else if (fileName.contains("projects_static")) {
+//                SqliteMgr.getInstance().createProject(projectList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+//            }
+                if (fileName.contains("projects_timeseries")) {
+                SqliteMgr.getInstance().createSeries(seriesList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+            } else if (fileName.contains("projects_traffic")) {
+                SqliteMgr.getInstance().createTraffic(trafficList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
             }
             SqliteMgr.getInstance().createVisit(new Visit(fileName));
         } catch (Exception e) {
